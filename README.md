@@ -1,7 +1,9 @@
 # ChatGPTWithFace
 
 Um teste utilizando chatgpt.
-Servidor rest que se conecta com openai para usar as APIs do ChatGPT
+
+Servidor rest que se conecta com openai para usar as APIs do ChatGPT.
+
 Client usando html, css e javascript para criar uma animação de fala.
 
 # Configuração
