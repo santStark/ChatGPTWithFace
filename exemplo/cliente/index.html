@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Exemplo</title>
+    <meta name="viewport" content="width=device-width, viewport-fit=cover">
+    <meta http-equiv="content-language" content="pt-br">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./src/css/global.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="Face">
+        <div class="Face__eyes">
+            <div class="Face__socket">
+                <div class="Face__eye">
+                    <div class="Face__pupil"></div>
+                </div>
+                <div class="Face__eye">
+                    <div class="Face__pupil"></div>
+                </div>
+            </div>
+        </div>
+        <div class="Bigode"></div>
+        <div class="Face__mouth">
+            <div class="Face__tooth"></div>
+            <div class="Face__tooth"></div>
+            <div class="Face__tooth"></div>
+            <div class="Face__tooth"></div>
+            <div class="Face__tooth"></div>
+            <div class="Face__tooth"></div>
+            <div class="Face__tooth"></div>
+            
+            <div class="Face__lip lip2"></div>
+            <!--<div class="Face__lip "></div>-->
+        </div>
+        <div style="margin-top:80px" id="resposta"></div>
+        <div id="minhaFala" ></div>
+    </div>
+
+    <script type="text/javascript" src="./src/js/global.js"></script>
+    <style>
+        body {
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        .Bigode{
+            margin-top: 50px;
+            margin-bottom: 3px;
+            width: 157px;
+            /* height: 1px; */
+            border: 5px dashed #030303;
+        }
+
+        .Face {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: #a6b4c4;
+            /*background-image:
+                radial-gradient(#a6b4c4,
+                    #59798e);*/
+            background-image: radial-gradient(#623d1e, #5c300b)
+        }
+
+        .Face__eyes {
+            width: 400px;
+            height: 150px;
+            /*border: 3px solid black;
+            border-radius: 200px;*/
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .Face__socket {
+            width: 375px;
+            /*height: 125px;
+            border: 3px solid black;
+            border-radius: 200px;
+            background: black;*/
+            height: 149px;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .Face__eye {
+            height: 145px;
+            width: 145px;
+            background: #fefbb8;
+            border-radius: 100%;
+            /*margin: -10px 10px 0px 10px;*/
+            margin: 5px 10px 0px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .Face__eye.animacaoOlhos::before {
+            content: '';
+            position: absolute;
+            width: 145px;
+            height: 50px;
+            top: -50px;
+            background: #623d1e;
+            animation: 5s ease-in-out 1s infinite topEyelid;
+        }
+
+        .Face__eye.animacaoOlhos::after {
+            content: '';
+            position: absolute;
+            width: 145px;
+            height: 50px;
+            bottom: -50px;
+            background: #623d1e;
+            animation: 5s ease-in-out 1s infinite bottomEyelid;
+        }
+
+
+        .Face__pupil {
+            width: 20px;
+            height: 20px;
+            background: black;
+        }
+
+        .Face__mouth {
+            width: 275px;
+            height: 100px;
+            background: #fefbb8;
+            /*margin-top: 80px;*/
+            border-radius: 50px;
+            border: 4px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .Face__tooth {
+            height: 100px;
+            width: 4px;
+            background: black;
+        }
+
+        .Face__lip {
+            position: absolute;
+            width: 275px;
+            height: 4px;
+            background: black;
+            top: calc(33% - 2px);
+        }
+
+        .lip2 {
+            top: calc(47% - 2px);
+        }
+
+
+        @keyframes boca {
+            0% {
+                top: calc(14% - 2px);
+                height: 50px;
+            }
+
+            100% {
+                top: calc(30% - 2px);
+                height: 50px;
+            }
+        }
+
+        @keyframes topEyelid {
+            0% {
+                transform: translateY(0);
+            }
+
+            20% {
+                transform: translateY(50px);
+            }
+
+            80% {
+                transform: translateY(50px);
+            }
+
+            100% {
+                transform: translateY(-0px);
+            }
+        }
+
+        @keyframes bottomEyelid {
+            0% {
+                transform: translateY(0px);
+            }
+
+            20% {
+                transform: translateY(-50px);
+            }
+
+            80% {
+                transform: translateY(-50px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+    </style>
+    <script defer="">
+
+        var exemplo;
+        (function (exemplo) {
+            class ExemploFace {
+
+                constructor() {
+
+                    this.mensagem = new SpeechSynthesisUtterance();
+                    this.els = {
+                        minhaFala: document.querySelector('#minhaFala'),
+                        resposta: document.querySelector('#resposta'),
+                        olhos: document.querySelectorAll('.Face__eye'),
+                        boca: document.querySelector('.Face__lip.lip2'),
+                    }
+
+                    this.dispositivoMovel = false;
+                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                        this.dispositivoMovel = true;
+                    }
+
+                    this.start();
+                    //lerTexto();
+
+                }
+
+                start() {
+
+                    this.palavraChave = 'wilson'; // troque para a palavra que você deseja para ativação
+                    this.recognition = new window['webkitSpeechRecognition']();
+                    this.recognition.interimResults = true;
+                    this.recognition.lang = "pt-BR";
+                    this.recognition.continuous = true;
+                    this.recognition.start();
+
+                    this.recognition.onresult = (event) => {
+
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+
+                            if (event.results[i].isFinal) {
+
+                                let content = event.results[i][0].transcript.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+                                const start = content.indexOf(this.palavraChave);
+                                this.els.minhaFala.innerText = '';
+                                this.els.minhaFala.innerText = content;
+
+                                if (start < 0) return;
+
+                                this.animarOlhos();
+                                this.els.resposta.innerText = '';
+                                content = content.replace(this.palavraChave, '');
+                                this.GetResposta(content);
+
+
+                            }
+
+                        }
+
+                    };
+
+                }
+
+                GetResposta(msg) {
+
+                    this.recognition.stop();
+                    this.getResposta2(msg).then((r) => {
+
+                        this.animarOlhos();
+                        this.els.resposta.innerText = r;
+                        this.falar(r);
+                        setTimeout(() => {
+                            this.start();
+                        }, 2000); 
+
+                    });
+
+
+                }
+
+                getResposta2(msg) {
+
+                    return new Promise((resolve, reject) => {
+
+  
+                        console.info(msg)
+                        const param = {
+                            msg: msg,
+                           
+                        }
+
+                        exemplo.comum.myFetch('minharesposta', param).then((ret) => {
+
+                            console.info(ret.msg);
+                            resolve(ret.msg);
+                            
+
+                        }).catch((err) => console.info(err));
+                        
+
+                    });
+
+                }
+
+                falar(msg) {
+
+                    this.animarBoca();
+                    this.els.minhaFala.click();
+                    const mensagem = new SpeechSynthesisUtterance();
+                    mensagem.text = msg;
+                    mensagem.onend = ()=>{
+                        this.paraBoca();
+                    }
+                    speechSynthesis.speak(mensagem);
+                    
+
+                }
+
+                animarBoca() {
+
+                    this.els.boca.style.animation = '.5s ease-in-out 1s infinite boca';
+                    this.els.boca.style.height = '50px';
+
+
+                }
+
+                paraBoca() {
+                
+                    this.els.boca.style.animation = '';
+                    this.els.boca.style.height = '4px';
+                    
+                }
+
+                animarOlhos() {
+
+                    this.els.olhos.forEach((el) => {
+
+                        el.classList.add('animacaoOlhos');
+
+                    });
+
+                    setTimeout(() => {
+                        this.els.olhos.forEach((el) => {
+
+                            el.classList.remove('animacaoOlhos');
+
+                        });
+                    }, 5000);
+
+                }
+
+            }
+            exemplo.face = new ExemploFace();
+        })(exemplo || (exemplo = {}));
+    </script>
+</body>
+
+</html>
