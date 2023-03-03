@@ -36,5 +36,3 @@ Client usando html, css e javascript para criar uma animação de fala.
 
 Basta dizer "Wilson, e sua pegunta logo em seguida".
 
-# Referências
-[Phaser 3](https://phaser.io/phaser3)
