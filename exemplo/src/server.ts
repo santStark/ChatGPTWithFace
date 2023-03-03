@@ -12,9 +12,6 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-
-//import { Cupons } from "./business/Cupons";
-
 var app = express();
 
 const oneDay = 1000 * 60 * 60 * 24;
